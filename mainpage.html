@@ -32,17 +32,65 @@
       .slider img {
         width: 100%;
         height: 100%;
-        max-height: 600px; /* 슬라이더 이미지의 최대 높이 설정 */
+        max-height: 400px; /* 슬라이더 이미지의 최대 높이 설정 */
         object-fit: cover; /* 이미지가 슬라이더를 꽉 채우도록 설정 */
         border-radius: 10px;
       }
 
       .slick-dots {
         position: relative;
-        margin-top: -5% !important;
+        margin-top: -8% !important;
         z-index: 9999;
       }
+      .cards-container {
+        margin-top: 120px;
+        max-width: 1072px;
+        width: 100%;
+        padding: 0 24px;
+      }
+      .card-section {
+        margin-bottom: 40px;
+      }
+      /* 카드 스타일링 */
+      .card {
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.2s ease;
+      }
 
+      .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .card-img-top {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .card-body {
+        padding: 16px;
+      }
+
+      .card-footer {
+        padding: 12px 16px;
+        background-color: rgba(0, 0, 0, 0.02);
+      }
+
+      /* 반응형 디자인 */
+      @media (max-width: 992px) {
+        .cards-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 576px) {
+        .cards-grid {
+          grid-template-columns: 1fr;
+        }
+      }
       /* 필요 없을 시 삭제할 것 */
       .main,
       #add_detail {
@@ -83,8 +131,10 @@
 
       const getMemberList = async () => {
         const db = initFirebase();
-
+        console.log(db, "introduce");
         const rawMembers = await getDocs(collection(db, "introduce"));
+        console.log(rawMembers, "rawMembers");
+
         const members = rawMembers.docs.map((doc) => ({
           main_image: doc.data().main_image,
           main_text: doc.data().main_text,
@@ -110,128 +160,113 @@
       // 페이지 최초 로딩 시 실행
       $(document).ready(async () => {
         const memberList = await getMemberList();
-
-        // memberList를 순회하며 동적으로 멤버 카드 element 생성
-        // 이를 root element의 자식 element로 추가
-
-        console.log(memberList);
-
-        // 상세 페이지로 넘어가는 onclick 추가
-        $(".main").click(async () => {
-          window.location.href = "./subpage.html";
-        });
-
         const root = $("#container");
-        let currentSection = "";
+        console.log(memberList, "memberList");
 
-        memberList.forEach((member, index) => {
-          if (index % CARDS_FOR_SECTION == 0) {
-            currentSection = `section${index / CARDS_FOR_SECTION}`;
-            let tempDiv = `
-            <div class="${currentSection}">
-              div id="card" class="row row-cols-1 row-cols-md-3 g-4">
-              </div>
-            </div>
-            `;
-            root.append(tempDiv);
+        // Create main container
+        root.append('<div class="cards-container"></div>');
+        const container = $(".cards-container");
+
+        // Calculate number of sections needed
+        const numSections = Math.ceil(memberList.length / CARDS_FOR_SECTION);
+
+        for (let i = 0; i < numSections; i++) {
+          const sectionHTML = `
+                  <div class="card-section" id="section${i}">
+                      <div class="row row-cols-1 row-cols-md-3 g-4">
+                      </div>
+                  </div>
+              `;
+          container.append(sectionHTML);
+
+          // Add cards for this section
+          const startIdx = i * CARDS_FOR_SECTION;
+          const endIdx = Math.min(
+            startIdx + CARDS_FOR_SECTION,
+            memberList.length
+          );
+
+          for (let j = startIdx; j < endIdx; j++) {
+            const member = memberList[j];
+            const cardHTML = `
+                      <div class="col">
+                          <div class="card h-100">
+                              <img src="${
+                                member.main_image
+                              }" class="card-img-top" alt="Member ${j + 1}" />
+                              <div class="card-body">
+                                  <h5 class="card-title">멤버 ${j + 1}</h5>
+                                  <p class="card-text">${member.main_text}</p>
+                              </div>
+                              <div class="card-footer">
+                                  <small class="text-body-secondary">앨범 날짜</small>
+                              </div>
+                          </div>
+                      </div>
+                  `;
+            $(`#section${i} .row`).append(cardHTML);
           }
+        }
 
-          console.log(member);
-
-          let tempHTML = `
-            <div class="col${index}">
-              <div class="card h-100">
-                <img
-                  src="${member.main_image}"
-                  class="card-img-top"
-                  alt="..."
-                />
-                <div class="card-body">
-                  <h5 class="card-title">멤버 ${index + 1}</h5>
-                  <p class="card-text">${member.main_text}</p>
-                </div>
-                <div class="card-footer">
-                  <small class="text-body-secondary">앨범 날짜</small>
-                </div>
-              </div>
-            </div>
-          `;
-          $(`.${currentSection}`).append(tempHTML);
-          $(`.col${index}`).click(async () => {
+        // Card click event
+        memberList.forEach((member, index) => {
+          $(`.col:eq(${index}) .card`).click(() => {
             setCurrentMember(memberList[index]);
           });
         });
 
-        // adddetail.html로 넘어가는 클릭 영역 동적으로 생성
-        // 필요없다면 삭제할 것
-        let addDetailHTML = `
-          <div id="add_detail">
-            <div class="mainbox">멤버 작성하기</div>
-          </div>
-        `;
-        root.append(addDetailHTML);
-        $("#add_detail").click(async () => {
+        // Page redirection on click
+        $("#add_detail").click(() => {
           window.location.href = "./adddetail.html";
         });
       });
+      $(document).ready(async () => {
+        const memberList = await getMemberList();
 
+        // 최신 5개의 이미지를 슬라이더에 추가
+        const latestMembers = memberList.slice(-5).reverse(); // 최신 5개만 추출하여 최신순으로 정렬
+
+        const slider = $("#slider");
+        latestMembers.forEach((member) => {
+          slider.append(`
+        <div>
+          <img src="${member.main_image}" alt="Latest Image" />
+        </div>
+      `);
+        });
+
+        // Slick Slider 초기화
+        slider.slick({
+          dots: true,
+          infinite: true,
+          speed: 300,
+          slidesToShow: 1,
+          adaptiveHeight: false,
+          fade: false,
+        });
+      });
       /*
-      랜덤 멤버 기능
-      const getRandomMember = () => {
-          const memberList = getMemberList();
-          return memberList[Math.floor(Math.random() * memberList.length)];
-      }
+            랜덤 멤버 기능
+            const getRandomMember = () => {
+                const memberList = getMemberList();
+                return memberList[Math.floor(Math.random() * memberList.length)];
+            }
 
-      // element에 등록될 메서드
-      const setRandomMember = () => {
-          const member = getRandomMember();
-          localStorage.setItem("currentMember", member);
-          presentCurrentMember(member);
-      }
-      */
+            // element에 등록될 메서드
+            const setRandomMember = () => {
+                const member = getRandomMember();
+                localStorage.setItem("currentMember", member);
+                presentCurrentMember(member);
+            }
+            */
     </script>
   </head>
   <body>
     <div id="header" class="header"></div>
     <div class="section1" id="section1">
-      <div class="slider" id="slider">
-        <div>
-          <img
-            src="https://images.unsplash.com/photo-1446768500601-ac47e5ec3719?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1446&q=80"
-            alt="..."
-          />
-        </div>
-        <div>
-          <img
-            src="https://images.unsplash.com/photo-1511992243105-2992b3fd0410?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
-            alt="..."
-          />
-        </div>
-        <div>
-          <img
-            src="https://images.unsplash.com/photo-1446768500601-ac47e5ec3719?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1446&q=80"
-            alt="..."
-          />
-        </div>
-        <div>
-          <img
-            src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzAxMTBfMjMz%2FMDAxNDg0MDUzNTU0MTEz.h9huZdcXFlEpGpMeyk3WLXE7FVQDWzKvzJeslZkdNd8g.4grDg9_bAChg6jh92ZuHbYQyIKV4l9iLt2N6j-wMX0Eg.PNG.mamacora%2Fwallhaven-407202.png&type=a340"
-            alt="..."
-          />
-        </div>
-      </div>
+      <div class="slider" id="slider"></div>
     </div>
-
-    <!-- 필요없다면 삭제할 것-->
-    <div id="container" class="container_column">
-      <div class="main">
-        <img class="mainbox"/>
-        <div class="text">
-          <p>아래 요소를 클릭 했을 시에 크게 보여주는 이미지</p>
-        </div>
-      </div>
-    </div>
-
+    <div class="cards-container"></div>
     <div id="footer" class="footer"></div>
   </body>
   <script>
@@ -239,16 +274,6 @@
       // 헤더 및 푸터 로드
       $("#header").load("header.html");
       $("#footer").load("footer.html");
-
-      // Slick Slider 초기화
-      $(".slider").slick({
-        dots: true,
-        infinite: true,
-        speed: 300,
-        slidesToShow: 1,
-        adaptiveHeight: false, // 슬라이더의 높이를 고정시킴
-        fade: false, // 페이드 효과를 끔
-      });
     });
   </script>
 </html>
