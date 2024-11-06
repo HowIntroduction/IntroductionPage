@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/uuid@8.3.2/dist/umd/uuid.min.js"></script>
+
+    <title>상세페이지</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Dongle&display=swap");
+
+      * {
+        font-family: "Dongle", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+      }
+
+      .whole {
+        background-color: aqua;
+        display: grid;
+        grid-gap: 2vw;
+        grid-template-columns: 1fr 1fr;
+        height: 100vh;
+      }
+
+      .left-side,
+      .right-side {
+        display: grid;
+        flex-direction: column;
+        padding: 2vw;
+        height: 90vh;
+        margin: auto;
+      }
+
+      .left-side {
+        grid-template-rows: 1fr 2fr;
+        background-color: aquamarine;
+        margin-left: 5vw;
+        margin-right: 5vw;
+      }
+
+      .right-side {
+        grid-template-rows: 1fr 1fr;
+        grid-gap: 2vw;
+        background-color: blueviolet;
+        margin-left: -5vw;
+        margin-right: 5vw;
+      }
+
+      .left-top,
+      .left-bottom,
+      .right-box {
+        background-color: bisque;
+        width: 90%;
+        margin: auto;
+      }
+
+      .left-top {
+        height: 30vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .left-top > img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      .left-bottom {
+        height: 50vh;
+        overflow: hidden;
+        background-color: brown;
+      }
+
+      .right-box {
+        height: 40vh;
+        background-color: pink;
+      }
+
+      .right-box > .clearfix {
+        overflow: hidden;
+      }
+
+      .header,
+      .footer {
+        height: 5vh;
+      }
+    </style>
+    <script type="module">
+        const id = uuid.v4();
+      // Firebase SDK 라이브러리 가져오기
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+      import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+      import {
+        collection,
+        addDoc,
+      } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+      import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+      // Firebase 구성 정보 설정
+      const firebaseConfig = {
+        apiKey: "AIzaSyClPXmUFKKAr6m1lFyn-v1W65Dl-X4foWE",
+        authDomain: "sparta-dafac.firebaseapp.com",
+        projectId: "sparta-dafac",
+        storageBucket: "sparta-dafac.firebasestorage.app",
+        messagingSenderId: "466405941138",
+        appId: "1:466405941138:web:9ff4fb0ae5f6f861622b4b",
+        measurementId: "G-FWYNHPBX6W",
+      };
+
+      // Firebase 인스턴스 초기화
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      $('#postingbtn').click(async function () {
+        let user_name = $('#user_name').val();
+        let main_image = $('#main_image').val();
+        let main_text = $('#main_text').val();
+        let sub_image1 = $('#sub_image1').val();
+        let sub_text1 = $('#sub_text1').val();
+        let sub_image2 = $('#sub_image2').val();
+        let sub_text2 = $('#sub_text2').val();
+
+        if (!user_name || !main_image || !main_text || !sub_image1 || !sub_text1 || !sub_image2 || !sub_text2) {
+            alert("모든 필드를 채워주세요!");
+        }
+        else {
+            let doc = {
+                'id': id,
+                'user_name' : user_name,
+                'main_image': main_image,
+                'main_text': main_text,
+                'sub_image1': sub_image1,
+                'sub_text1': sub_text1,
+                'sub_image2': sub_image2,
+                'sub_text2': sub_text2,
+            }
+            try {
+                await addDoc(collection(db, "introduce"), doc);
+                alert('저장 완료!');
+                window.location.href = 'subpage1.html?name=' + user_name;
+            } catch (e) {
+                console.error(e);
+            }
+        }        
+      })
+
+    </script>
+  </head>
+
+  <body>
+    <header class="header"><input
+        type="email"
+        class="form-control"
+        id="user_name"
+        placeholder="당신의 이름을 입력하세요."
+      /></header>
+    <div class="whole">
+      <div class="left-side">
+        <div class="left-top">
+            <input
+            type="email"
+            class="form-control"
+            id="main_image"
+            placeholder="이미지 주소를 입력하세요."
+          />
+        </div>
+        <div class="left-bottom">
+            <textarea
+            id="main_text"
+            class="form-control"
+            aria-label="With textarea"
+            placeholder="내용을 입력하세요."
+          ></textarea>
+        </div>
+      </div>
+      <div class="right-side">
+        <!-- 여기부터 반복 -->
+        <div class="right-box">
+          <div class="clearfix">
+            <input
+              id="sub_image1"
+              type="email"
+              class="form-control"
+              placeholder="이미지 주소를 입력하세요."
+            />
+            <textarea
+              id="sub_text1"
+              class="form-control"
+              aria-label="With textarea"
+              placeholder="내용을 입력하세요."
+            ></textarea>
+          </div>
+        </div>
+        <div class="right-box">
+          <div class="clearfix">
+            <input
+              id="sub_image2"
+              type="email"
+              class="form-control"
+              id="image"
+              placeholder="이미지 주소를 입력하세요."
+            />
+            <textarea
+              id="sub_text2"
+              class="form-control"
+              aria-label="With textarea"
+              placeholder="내용을 입력하세요."
+            ></textarea>
+            </div>
+          </div>
+        </div>
+        <!-- 여기까지 -->
+      </div>
+    </div>
+    <footer class="footer">푸터입니다
+        <button id="postingbtn" type="button" class="btn btn-info">등록하기</button>
+    </footer>
+  </body>
+</html>

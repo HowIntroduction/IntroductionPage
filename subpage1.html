@@ -3,6 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>상세페이지</title>
     <style>
@@ -59,7 +61,6 @@
             display: flex;
             align-items: center;
             justify-content: center; 
-            background-color: bisque;
         }
 
         .left-top > img {
@@ -87,47 +88,83 @@
             height: 5vh;
         }
     </style>
-    <script>
+    <script type="module">
+
+        const member = new URLSearchParams(window.location.search);
+        let name = member.get('name');
+        if (name) {
+            intro.textContent = intro.textContent.replace('이름', name);
+        } else {
+            intro.textContent = intro.textContent.replace('이름', '파이리');
+            name = "파이리";
+        }
+        // Firebase SDK 라이브러리 가져오기
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import {query, where, getDocs} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+        // Firebase 구성 정보 설정
+        const firebaseConfig = {
+            apiKey: "AIzaSyClPXmUFKKAr6m1lFyn-v1W65Dl-X4foWE",
+            authDomain: "sparta-dafac.firebaseapp.com",
+            projectId: "sparta-dafac",
+            storageBucket: "sparta-dafac.firebasestorage.app",
+            messagingSenderId: "466405941138",
+            appId: "1:466405941138:web:9ff4fb0ae5f6f861622b4b",
+            measurementId: "G-FWYNHPBX6W"
+        };
+
+
+        // Firebase 인스턴스 초기화
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        $('#return_home').click(function() {
+            window.location.href = 'mainpage.html';
+        });
+        
+        const find_by_name = query(collection(db, "introduce"), where("user_name", "==", name))
+        let docs = await getDocs(find_by_name);
+        docs.forEach((doc) => {
+            let row = doc.data();
+
+            if(row['main_image']) {
+                $('#main_image').attr('src',row['main_image']);
+            }
+            if(row['main_text']) {
+                $('#main_text').text(row['main_text']);
+            }
+            if(row['sub_image1']) {
+                $('#sub_image1').attr('src',row['sub_image1']);
+            }
+            if(row['sub_text1']) {
+                $('#sub_text1').text(row['sub_text1']);
+            }
+            if(row['sub_image2']) {
+                $('#sub_image2').attr('src',row['sub_image2']);
+            }
+            if(row['sub_text2']) {
+                $('#sub_text2').text(row['sub_text2']);
+            }
+        });
 
     </script>
 </head>
 
 <body>
-    <header class="header">헤더입니다</header>
+    <header class="header" id="header">
+        <p id="intro">이름 님의 페이지 입니다.</p>
+        <button id="return_home" type="button" class="btn btn-primary">홈</button>
+    </header>
     <div class="whole">
         <div class="left-side">
             <div class="left-top">
-                <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2F20120817_156%2Fhan_na0401_1345180075333FxYjP_JPEG%2F%25A4%25AC%25A4%25B7%25A4%25BD%25A4%25B7%25A4%25BD%25A4%25B7%25A4%25BD_%252813%2529.jpg&type=a340"
-                    alt="...">
+                <img id="main_image" src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzAxMTBfMjMz%2FMDAxNDg0MDUzNTU0MTEz.h9huZdcXFlEpGpMeyk3WLXE7FVQDWzKvzJeslZkdNd8g.4grDg9_bAChg6jh92ZuHbYQyIKV4l9iLt2N6j-wMX0Eg.PNG.mamacora%2Fwallhaven-407202.png&type=a340"
+                    alt="기본 이미지">
             </div>
             <div class="left-bottom">
-                <p>
-                    As you can see the paragraphs gracefully wrap around the floated image. Now imagine how this
-                    would look with some actual content in here, rather than just this boring placeholder text that
-                    goes on and on, but actually conveys no tangible information at. It simply takes up space and
-                    should not really be read.
-                    As you can see the paragraphs gracefully wrap around the floated image. Now imagine how this
-                    would look with some actual content in here, rather than just this boring placeholder text that
-                    goes on and on, but actually conveys no tangible information at. It simply takes up space and
-                    should not really be read.As you can see the paragraphs gracefully wrap around the floated image. Now imagine how this
-                    would look with some actual content in here, rather than just this boring placeholder text that
-                    goes on and on, but actually conveys no tangible information at. It simply takes up space and
-                    should not really be read.As you can see the paragraphs gracefully wrap around the floated image. Now imagine how this
-                    would look with some actual content in here, rather than just this boring placeholder text that
-                    goes on and on, but actually conveys no tangible information at. It simply takes up space and
-                    should not really be read.As you can see the paragraphs gracefully wrap around the floated image. Now imagine how this
-                    would look with some actual content in here, rather than just this boring placeholder text that
-                    goes on and on, but actually conveys no tangible information at. It simply takes up space and
-                    should not really be read.As you can see the paragraphs gracefully wrap around the floated image. Now imagine how this
-                    would look with some actual content in here, rather than just this boring placeholder text that
-                    goes on and on, but actually conveys no tangible information at. It simply takes up space and
-                    should not really be read.As you can see the paragraphs gracefully wrap around the floated image. Now imagine how this
-                    would look with some actual content in here, rather than just this boring placeholder text that
-                    goes on and on, but actually conveys no tangible information at. It simply takes up space and
-                    should not really be read.As you can see the paragraphs gracefully wrap around the floated image. Now imagine how this
-                    would look with some actual content in here, rather than just this boring placeholder text that
-                    goes on and on, but actually conveys no tangible information at. It simply takes up space and
-                    should not really be read.
+                <p id="main_text">아직 작성된 글이 없습니다. 
                 </p>
             </div>
         </div>
@@ -135,50 +172,20 @@
             <!-- 여기부터 반복 -->
             <div class="right-box">
                 <div class="clearfix">
-                    <img src="https://search.pstatic.net/sunny/?src=https%3A%2F%2Fcdn.crowdpic.net%2Fdetail-thumb%2Fthumb_d_CC684E2D4EBAFA45963E30C06057607B.jpg&type=a340"
-                        alt="...">
-                    <p>
-                        A paragraph of placeholder text. We're using it here to show the use of the clearfix class.
-                        We're adding quite a few meaningless phrases here to demonstrate how the columns interact here
-                        with the floated image.
-                    </p>                    
-                    <p>
-                        As you can see the paragraphs gracefully wrap around the floated image. Now imagine how this
-                        would look with some actual content in here, rather than just this boring placeholder text that
-                        goes on and on, but actually conveys no tangible information at. It simply takes up space and
-                        should not really be read.
-                    </p>
-
-                    <p>
-                        And yet, here you are, still persevering in reading this placeholder text, hoping for some more
-                        insights, or some hidden easter egg of content. A joke, perhaps. Unfortunately, there's none of
-                        that here.
-                    </p>
+                    <img id="sub_image1" src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzAxMTBfMjMz%2FMDAxNDg0MDUzNTU0MTEz.h9huZdcXFlEpGpMeyk3WLXE7FVQDWzKvzJeslZkdNd8g.4grDg9_bAChg6jh92ZuHbYQyIKV4l9iLt2N6j-wMX0Eg.PNG.mamacora%2Fwallhaven-407202.png&type=a340"
+                        alt="기본 이미지">
+                    <p id="sub_text1">아직 작성된 글이 없습니다.                  
+                    </p> 
                 </div>
             </div>
             <div class="right-box">
                 <div class="clearfix">
                     <div class="clearfix">
-                        <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2F20150323_123%2Fyhj5292_14270659942188HuOg_JPEG%2Fforest-660841_640.jpg&type=a340"
-                            alt="...">
-
-                        <p>
-                            A paragraph of placeholder text. We're using it here to show the use of the clearfix class.
-                            We're adding quite a few meaningless phrases here to demonstrate how the columns interact
-                            here with the floated image.
+                        <img id="sub_image2" src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzAxMTBfMjMz%2FMDAxNDg0MDUzNTU0MTEz.h9huZdcXFlEpGpMeyk3WLXE7FVQDWzKvzJeslZkdNd8g.4grDg9_bAChg6jh92ZuHbYQyIKV4l9iLt2N6j-wMX0Eg.PNG.mamacora%2Fwallhaven-407202.png&type=a340"
+                            alt="기본 이미지">
+                        <p id="sub_text2">
+                            아직 작성된 글이 없습니다. 
                         </p>
-
-                        <p>
-                            As you can see the paragraphs gracefully wrap around the floated image. Now imagine how this
-                            would look with some actual content in here, rather than just this boring placeholder text
-                            that goes on and on, but actually conveys no tangible information at. It simply takes up
-                            space and should not really be read.
-                        </p>
-
-                        <p>
-                            And yet, here you are, still persevering in reading this placeholder text, hoping for some
-                            more insights, or some hidden easter egg of content. A joke, perhaps. Unfortunately, there's
-                            none of that here.
                         </p>
                     </div>
                 </div>
