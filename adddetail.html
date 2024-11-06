@@ -6,8 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/uuid@8.3.2/dist/umd/uuid.min.js"></script>
-
     <title>상세페이지</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"
+    />
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Dongle&display=swap");
 
@@ -147,17 +158,23 @@
             }
         }        
       })
+      // 헤더푸터 사용방법
+    $(function () {
+      $("#header").load("header.html");
+      $("#footer").load("footer.html");
+  });
 
     </script>
   </head>
 
   <body>
-    <header class="header"><input
+    <div id="header" class="header"></div>
+    <input
         type="email"
         class="form-control"
         id="user_name"
         placeholder="당신의 이름을 입력하세요."
-      /></header>
+      />
     <div class="whole">
       <div class="left-side">
         <div class="left-top">
@@ -216,8 +233,8 @@
         <!-- 여기까지 -->
       </div>
     </div>
-    <footer class="footer">푸터입니다
-        <button id="postingbtn" type="button" class="btn btn-info">등록하기</button>
-    </footer>
+    <div id="footer" class="footer">        
+    </div>
+    <button id="postingbtn" type="button" class="btn btn-info">등록하기</button>
   </body>
 </html>

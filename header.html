@@ -10,7 +10,7 @@
     </ul>
   </div>
   <!-- 로고와 메뉴 -->
-  <img class="header_logo" src="images/how_logo.png" alt="로고" />
+  <img id="home" class="header_logo" src="images/how_logo.png" alt="로고" />
   <!-- 우측 뒤로가기 아이콘 및 검색 -->
   <div class="right_content">
     <input type="text" class="search_input" placeholder="검색하기" />
@@ -23,5 +23,9 @@
     } catch (e) {
       console.error(e);
     }
+  });
+
+  $("#home").click(function () {
+    window.location.href = "mainpage.html";
   });
 </script>
