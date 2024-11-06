@@ -7,6 +7,23 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>상세페이지</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha384-XxheqFYqN6V9QRhR2Fgw+KVYlW5U6s80N2y0tZ9dtM5i0UszUA4GZ5v5OY7KMb6L"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"
+    />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Dongle&display=swap');
 
@@ -91,13 +108,10 @@
     <script type="module">
 
         const member = new URLSearchParams(window.location.search);
-        let name = member.get('name');
-        if (name) {
-            intro.textContent = intro.textContent.replace('이름', name);
-        } else {
-            intro.textContent = intro.textContent.replace('이름', '파이리');
-            name = "파이리";
-        }
+        let member_id = member.get('id');          
+        if (!member_id) {
+            member_id = "80784122-f234-4955-991b-35976fc289d5";
+        } 
         // Firebase SDK 라이브러리 가져오기
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
@@ -124,8 +138,8 @@
             window.location.href = 'mainpage.html';
         });
         
-        const find_by_name = query(collection(db, "introduce"), where("user_name", "==", name))
-        let docs = await getDocs(find_by_name);
+        const find_by_id = query(collection(db, "introduce"), where("id", "==", member_id))
+        let docs = await getDocs(find_by_id);
         docs.forEach((doc) => {
             let row = doc.data();
 
@@ -147,16 +161,23 @@
             if(row['sub_text2']) {
                 $('#sub_text2').text(row['sub_text2']);
             }
+            if(row['user_name']) {
+                intro.textContent = intro.textContent.replace('이름', row['user_name']);
+            }    
         });
-
+    // 헤더푸터 사용방법
+    $(function () {
+        $("#header").append($("<div>").load("header.html"));
+        $("#footer").load("footer.html");
+    });
     </script>
 </head>
 
 <body>
-    <header class="header" id="header">
+    <div class="header" id="header">
         <p id="intro">이름 님의 페이지 입니다.</p>
         <button id="return_home" type="button" class="btn btn-primary">홈</button>
-    </header>
+    </div>
     <div class="whole">
         <div class="left-side">
             <div class="left-top">
