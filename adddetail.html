@@ -141,7 +141,7 @@
             try {
                 await addDoc(collection(db, "introduce"), doc);
                 alert('저장 완료!');
-                window.location.href = 'subpage1.html?name=' + user_name;
+                window.location.href = 'subpage1.html?id=' + id;
             } catch (e) {
                 console.error(e);
             }
