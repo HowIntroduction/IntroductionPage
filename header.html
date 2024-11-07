@@ -28,4 +28,11 @@
   $("#home").click(function () {
     window.location.href = "mainpage.html";
   });
+
+  $(".search_input").keydown(e => {
+    if(e.keyCode == 13) {
+      window.location.href = `searchpage.html?id=${e.target.value}`;
+    }
+  });
+
 </script>
