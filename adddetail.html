@@ -128,26 +128,26 @@
 
       $('#postingbtn').click(async function () {
         let user_name = $('#user_name').val();
-        let main_image = $('#main_image').val();
-        let main_text = $('#main_text').val();
-        let sub_image1 = $('#sub_image1').val();
-        let sub_text1 = $('#sub_text1').val();
-        let sub_image2 = $('#sub_image2').val();
-        let sub_text2 = $('#sub_text2').val();
+        let user_card = $('#user_card').val();
+        let text1 = $('#text1').val();
+        let image1 = $('#image1').val();
+        let text2 = $('#text2').val();
+        let mbti_image = $('#mbti_image').val();
+        let mbti_text = $('#mbti_text').val();
 
-        if (!user_name || !main_image || !main_text || !sub_image1 || !sub_text1 || !sub_image2 || !sub_text2) {
+        if (!user_name || !user_card || !text1 || !image1 || !text2 || !mbti_image || !mbti_text) {
             alert("모든 필드를 채워주세요!");
         }
         else {
             let doc = {
                 'id': id,
                 'user_name' : user_name,
-                'main_image': main_image,
-                'main_text': main_text,
-                'sub_image1': sub_image1,
-                'sub_text1': sub_text1,
-                'sub_image2': sub_image2,
-                'sub_text2': sub_text2,
+                'user_card': user_card,
+                'text1': text1,
+                'image1': image1,
+                'text2': text2,
+                'mbti_image': mbti_image,
+                'mbti_text': mbti_text,
             }
             try {
                 await addDoc(collection(db, "introduce"), doc);
@@ -181,13 +181,13 @@
             <input
             type="email"
             class="form-control"
-            id="main_image"
+            id="user_card"
             placeholder="이미지 주소를 입력하세요."
           />
         </div>
         <div class="left-bottom">
             <textarea
-            id="main_text"
+            id="text1"
             class="form-control"
             aria-label="With textarea"
             placeholder="내용을 입력하세요."
@@ -199,13 +199,13 @@
         <div class="right-box">
           <div class="clearfix">
             <input
-              id="sub_image1"
+              id="image1"
               type="email"
               class="form-control"
               placeholder="이미지 주소를 입력하세요."
             />
             <textarea
-              id="sub_text1"
+              id="text2"
               class="form-control"
               aria-label="With textarea"
               placeholder="내용을 입력하세요."
@@ -215,14 +215,14 @@
         <div class="right-box">
           <div class="clearfix">
             <input
-              id="sub_image2"
+              id="mbti_image"
               type="email"
               class="form-control"
               id="image"
               placeholder="이미지 주소를 입력하세요."
             />
             <textarea
-              id="sub_text2"
+              id="mbti_text"
               class="form-control"
               aria-label="With textarea"
               placeholder="내용을 입력하세요."

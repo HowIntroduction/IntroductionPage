@@ -123,8 +123,12 @@
       import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
       import {
         getFirestore,
+        query,
+        where,
         collection,
         getDocs,
+        deleteDoc,
+        doc,
       } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
       const CARDS_FOR_SECTION = 3;
@@ -152,12 +156,12 @@
 
         const members = rawMembers.docs.map((doc) => ({
           id: doc.data().id,
-          main_image: doc.data().main_image,
-          main_text: doc.data().main_text,
-          sub_image1: doc.data().sub_image1,
-          sub_image2: doc.data().sub_image2,
-          sub_text1: doc.data().sub_text1,
-          sub_text2: doc.data().sub_text2,
+          user_card: doc.data().user_card,
+          text1: doc.data().text1,
+          image1: doc.data().image1,
+          mbti_image: doc.data().mbti_image,
+          text2: doc.data().text2,
+          mbti_text: doc.data().mbti_text,
         }));
 
         return members;
@@ -169,8 +173,8 @@
       };
 
       const presentCurrentMember = (member) => {
-        $(".mainbox").attr("src", member.main_image);
-        $(".text").text(member.main_text);
+        $(".mainbox").attr("src", member.user_card);
+        $(".text").text(member.text1);
       };
 
       // 페이지 최초 로딩 시 실행
@@ -206,16 +210,17 @@
             const member = memberList[j];
             const cardHTML = `
                       <div class="col">
-                          <div class="card h-100">
+                          <div class="card h-100" data-id="${member.id}">
                               <img src="${
-                                member.main_image
+                                member.user_card
                               }" class="card-img-top" alt="Member ${j + 1}" />
                               <div class="card-body">
                                   <h5 class="card-title">멤버 ${j + 1}</h5>
-                                  <p class="card-text">${member.main_text}</p>
+                                  <p class="card-text">${member.text1}</p>
                               </div>
                               <div class="card-footer">
                                   <small class="text-body-secondary">앨범 날짜</small>
+                                  <button type="button" class="delete-button btn btn-info">삭제</button>
                               </div>
                           </div>
                       </div>
@@ -227,9 +232,12 @@
         // 2. 카드 클릭 이벤트 수정
         memberList.forEach((member, index) => {
           $(`.col:eq(${index}) .card`).click(() => {
-            setCurrentMember(memberList[index]);
-            // 상세 페이지로 이동
-            window.location.href = `./subpage1.html?id=${member.id}`;
+            if (!$(event.target).hasClass("delete-button")) {
+              // 삭제 버튼 클릭을 제외한 클릭
+              setCurrentMember(memberList[index]);
+              //상세 페이지로 이동
+              window.location.href = `./subpage1.html?id=${member.id}`;
+            }
           });
         });
         // Page redirection on click
@@ -237,6 +245,38 @@
           window.location.href = "./adddetail.html";
         });
       });
+
+      // 삭제 버튼 클릭 이벤트 처리
+      $(document).on("click", ".delete-button", async function (event) {
+        event.stopPropagation(); // 카드 클릭 이벤트가 실행되지 않도록 막음
+        const cardElement = $(this).closest(".card"); // 삭제 버튼이 포함된 카드 찾기
+        const memberId = cardElement.data("id"); // 해당 카드의 멤버 ID
+        if (memberId) {
+          try {
+            const db = initFirebase();
+
+            const target = await getDocs(
+              query(collection(db, "introduce"), where("id", "==", memberId))
+            );
+            for (const documentTarget of target.docs) {
+              const documentId = documentTarget.id; // 문서의 실제 ID
+              const docRef = doc(db, "introduce", documentId); // 문서 참조
+              await deleteDoc(docRef); // 문서 삭제
+              console.log(`문서 ${documentId} 삭제 완료`);
+            }
+            // 삭제 후 페이지 새로 고침
+            cardElement.closest(".col").remove();
+            alert("삭제가 완료되었습니다.");
+            //window.location.reload(); // 페이지 새로 고침
+          } catch (error) {
+            alert("삭제 중 오류가 발생했습니다: " + error.message);
+            console.log(error.message);
+          }
+        } else {
+          alert("멤버 ID를 찾을 수 없습니다.");
+        }
+      });
+
       $(document).ready(async () => {
         const memberList = await getMemberList();
 
@@ -247,7 +287,7 @@
         latestMembers.forEach((member) => {
           slider.append(`
         <div>
-          <img src="${member.main_image}" alt="Latest Image" />
+          <img src="${member.user_card}" alt="Latest Image" />
         </div>
       `);
         });

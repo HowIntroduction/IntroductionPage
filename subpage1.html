@@ -107,8 +107,8 @@
         justify-content: space-between;
       }
 
-      .sub_image1,
-      .sub_image2 {
+      .image1,
+      .mbti_image {
         max-width: 450px; /* 이미지 크기 조정 */
         max-height: 300px;
         object-fit: cover;
@@ -128,8 +128,8 @@
         overflow: hidden;
       }
 
-      .sub_text1,
-      .sub_text2 {
+      .text2,
+      .mbti_text {
         width: 100%;
         height: 100%;
         max-width: 450px;
@@ -180,23 +180,23 @@
       docs.forEach((doc) => {
         let row = doc.data();
 
-        if (row["main_image"]) {
-          $("#main_image").attr("src", row["main_image"]);
+        if (row["user_card"]) {
+          $("#user_card").attr("src", row["user_card"]);
         }
-        if (row["main_text"]) {
-          $("#main_text").text(row["main_text"]);
+        if (row["text1"]) {
+          $("#text1").text(row["text1"]);
         }
-        if (row["sub_image1"]) {
-          $("#sub_image1").attr("src", row["sub_image1"]);
+        if (row["image1"]) {
+          $("#image1").attr("src", row["image1"]);
         }
-        if (row["sub_text1"]) {
-          $("#sub_text1").text(row["sub_text1"]);
+        if (row["text2"]) {
+          $("#text2").text(row["text2"]);
         }
-        if (row["sub_image2"]) {
-          $("#sub_image2").attr("src", row["sub_image2"]);
+        if (row["mbti_image"]) {
+          $("#mbti_image").attr("src", row["mbti_image"]);
         }
-        if (row["sub_text2"]) {
-          $("#sub_text2").text(row["sub_text2"]);
+        if (row["mbti_text"]) {
+          $("#mbti_text").text(row["mbti_text"]);
         }
       });
       // 헤더푸터 사용방법
@@ -210,65 +210,36 @@
   <body>
     <div class="header" id="header"></div>
     <div class="whole">
-      <div class="left-top">
-        <img
-          id="main_image"
-          src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzAxMTBfMjMz%2FMDAxNDg0MDUzNTU0MTEz.h9huZdcXFlEpGpMeyk3WLXE7FVQDWzKvzJeslZkdNd8g.4grDg9_bAChg6jh92ZuHbYQyIKV4l9iLt2N6j-wMX0Eg.PNG.mamacora%2Fwallhaven-407202.png&type=a340"
-          alt="기본 이미지"
-        />
-      </div>
-      <section class="introduce-container">
-        <div class="introduce">
-          <h1 id="title">My Introduce</h1>
-          <p id="main_text">이름</p>
+        <div class="left-side">
+            <div class="left-top">
+                <img id="user_card" src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzAxMTBfMjMz%2FMDAxNDg0MDUzNTU0MTEz.h9huZdcXFlEpGpMeyk3WLXE7FVQDWzKvzJeslZkdNd8g.4grDg9_bAChg6jh92ZuHbYQyIKV4l9iLt2N6j-wMX0Eg.PNG.mamacora%2Fwallhaven-407202.png&type=a340"
+                    alt="기본 이미지">
+            </div>
+            <div class="left-bottom">
+                <p id="text1">아직 작성된 글이 없습니다. 
+                </p>
+            </div>
         </div>
         <div class="right-side">
-          <!-- 여기부터 반복 -->
-          <div class="right-box">
-            <div class="clearfix">
-              <img
-                id="sub_image1"
-                class="sub_image1"
-                src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzAxMTBfMjMz%2FMDAxNDg0MDUzNTU0MTEz.h9huZdcXFlEpGpMeyk3WLXE7FVQDWzKvzJeslZkdNd8g.4grDg9_bAChg6jh92ZuHbYQyIKV4l9iLt2N6j-wMX0Eg.PNG.mamacora%2Fwallhaven-407202.png&type=a340"
-                alt="기본 이미지"
-              />
-              <div id="sub_text1" class="sub_text1">
-                <p id="p" class="p">
-                  아직 작성된 글이 없습니다.아직 작성된 글이 없습니다.아직
-                  작성된 글이 없습니다.아직 작성된 글이 없습니다.아직 작성된
-                  글이 없습니다.아직 작성된 글이 없습니다.아직 작성된 글이
-                  없습니다.아직 작성된 글이 없습니다.아직 작성된 글이
-                  없습니다.아직 작성된 글이 없습니다.아직 작성된 글이 없습니다.
-                  아직 작성된 글이 없습니다.아직 작성된 글이 없습니다.아직 아직
-                  작성된 글이 없습니다.아직 작성된 글이 없습니다.아직 작성된
-                  글이 없습니다.아직 작성된 글이 없습니다.아직 작성된 글이
-                  없습니다.아직 작성된 글이 없습니다.아직 작성된 글이
-                  없습니다.아직 작성된 글이 없습니다.아직 작성된 글이
-                  없습니다.아직 작성된 글이 없습니다.아직 작성된 글이 없습니다.
-                  아직 작성된 글이 없습니다.아직 작성된 글이 없습니다.아직
-                  작성된 글이 없습니다.아직 작성된 글이 없습니다.아직 작성된
-                  글이 없습니다.아직 작성된 글이 없습니다.아직 작성된 글이
-                  없습니다.아직 작성된 글이 없습니다.아직 작성된 글이
-                  없습니다.아직 작성된 글이 없습니다.아직 작성된 글이 없습니다.
-                  작성된 글이 없습니다.아직 작성된 글이 없습니다.아직 작성된
-                  글이 없습니다.아직 작성된 글이 없습니다.아직 작성된 글이
-                  없습니다.아직 작성된 글이 없습니다.아직 작성된 글이
-                  없습니다.아직 작성된 글이 없습니다.아직 작성된 글이 없습니다.
-                </p>
-              </div>
+            <!-- 여기부터 반복 -->
+            <div class="right-box">
+                <div class="clearfix">
+                    <img id="image1" src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzAxMTBfMjMz%2FMDAxNDg0MDUzNTU0MTEz.h9huZdcXFlEpGpMeyk3WLXE7FVQDWzKvzJeslZkdNd8g.4grDg9_bAChg6jh92ZuHbYQyIKV4l9iLt2N6j-wMX0Eg.PNG.mamacora%2Fwallhaven-407202.png&type=a340"
+                        alt="기본 이미지">
+                    <p id="text2">아직 작성된 글이 없습니다.                  
+                    </p> 
+                </div>
             </div>
-          </div>
-          <div class="right-box">
-            <div class="clearfix">
-              <div class="clearfix">
-                <img
-                  id="sub_image2"
-                  class="sub_image2"
-                  src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzAxMTBfMjMz%2FMDAxNDg0MDUzNTU0MTEz.h9huZdcXFlEpGpMeyk3WLXE7FVQDWzKvzJeslZkdNd8g.4grDg9_bAChg6jh92ZuHbYQyIKV4l9iLt2N6j-wMX0Eg.PNG.mamacora%2Fwallhaven-407202.png&type=a340"
-                  alt="기본 이미지"
-                />
-                <div id="sub_text2" class="sub_text2">
-                  <p id="p" class="p">아직 작성된 글이 없습니다.</p>
+            <div class="right-box">
+                <div class="clearfix">
+                    <div class="clearfix">
+                        <img id="mbti_image" src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzAxMTBfMjMz%2FMDAxNDg0MDUzNTU0MTEz.h9huZdcXFlEpGpMeyk3WLXE7FVQDWzKvzJeslZkdNd8g.4grDg9_bAChg6jh92ZuHbYQyIKV4l9iLt2N6j-wMX0Eg.PNG.mamacora%2Fwallhaven-407202.png&type=a340"
+                            alt="기본 이미지">
+                        <p id="mbti_text">
+                            아직 작성된 글이 없습니다. 
+                        </p>
+                        </p>
+                    </div>
                 </div>
               </div>
             </div>
