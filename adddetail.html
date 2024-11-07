@@ -4,10 +4,17 @@
     <meta charset="UTF-8" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <script src="https://cdn.jsdelivr.net/npm/uuid@8.3.2/dist/umd/uuid.min.js"></script>
     <title>상세페이지</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" crossorigin="anonymous">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      crossorigin="anonymous"
+    />
     <link rel="stylesheet" href="styles.css" />
     <link
       rel="stylesheet"
@@ -28,80 +35,141 @@
         font-style: normal;
       }
 
-      .whole {
-        background-color: aqua;
-        display: grid;
-        grid-gap: 2vw;
-        grid-template-columns: 1fr 1fr;
-        height: 100vh;
-      }
-
-      .left-side,
-      .right-side {
-        display: grid;
-        flex-direction: column;
-        padding: 2vw;
-        height: 90vh;
-        margin: auto;
-      }
-
-      .left-side {
-        grid-template-rows: 1fr 2fr;
-        background-color: aquamarine;
-        margin-left: 5vw;
-        margin-right: 5vw;
-      }
-
-      .right-side {
-        grid-template-rows: 1fr 1fr;
-        grid-gap: 2vw;
-        background-color: blueviolet;
-        margin-left: -5vw;
-        margin-right: 5vw;
-      }
-
-      .left-top,
-      .left-bottom,
-      .right-box {
-        background-color: bisque;
-        width: 90%;
-        margin: auto;
-      }
-
-      .left-top {
-        height: 30vh;
+      body {
+        width: 100%;
+        height: 100%;
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        margin: 0;
+        padding: 0;
         justify-content: center;
+        align-items: center;
+      }
+      .whole {
+        display: flex;
+        flex-direction: row;
+        height: 100%;
+        margin: auto;
+        justify-content: center;
+        margin-top: 10px;
+        max-width: 1072px;
+        width: 100%;
+        padding: 0 24px;
       }
 
-      .left-top > img {
-        max-width: 100%;
+      .right-side {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        height: 100%;
+        width: 90%;
+      }
+
+      .mypostingbox {
+        width: 90%;
+        height: 100%;
+        margin: 30px auto 0px auto;
+        padding: 20px;
+        box-shadow: 0px 0px 3px 0px blue;
+        border-radius: 5px;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 1328px;
+        max-height: 80px;
+        margin: 0 auto;
+        padding: 16px 24px;
+      }
+      .header_logo {
+        width: 100px;
         height: auto;
       }
-
-      .left-bottom {
-        height: 50vh;
-        overflow: hidden;
-        background-color: brown;
+      .header_return_Icon {
+        width: 50px;
+        height: auto;
+        max-height: 50px;
       }
 
-      .right-box {
-        height: 40vh;
-        background-color: pink;
-      }
-
-      .right-box > .clearfix {
-        overflow: hidden;
-      }
-
-      .header,
       .footer {
-        height: 5vh;
+        width: 100%;
+        height: 100%;
+        max-height: 150px;
+        max-width: 1328px;
+        background-color: white;
+        padding: 40px 0;
+        color: #71717a;
+        font-size: 14px;
+      }
+
+      .footer_wrap {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .footer_top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .footer_top_title div {
+        font-weight: bold;
+        gap: 16px;
+        font-size: 16px;
+      }
+
+      .footer_top_title span p {
+        margin: 0;
+        line-height: 1.5;
+      }
+
+      .footer_nav {
+        list-style: none;
+        display: flex;
+        gap: 15px;
+        padding: 0;
+      }
+
+      .footer_nav li a {
+        text-decoration: none;
+        color: #71717a;
+      }
+      .btn {
+        margin: 20px auto auto auto;
+        display: flex;
+        flex-direction: center;
+
+        justify-content: space-between;
+        align-items: center;
+      }
+      .form-control {
+        min-height: 10px;
+      }
+      .form-control1 {
+        padding: auto;
+        width: 60%;
+      }
+      .form-control2 {
+        min-height: 100px;
+        width: 100%;
+      }
+      .card {
+        align-items: center;
+      }
+      .card-footer {
+        width: 100%;
       }
     </style>
     <script type="module">
-        const id = uuid.v4();
+      const id = uuid.v4();
       // Firebase SDK 라이브러리 가져오기
       import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
       import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
@@ -126,115 +194,143 @@
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
 
-      $('#postingbtn').click(async function () {
-        let user_name = $('#user_name').val();
-        let user_card = $('#user_card').val();
-        let text1 = $('#text1').val();
-        let image1 = $('#image1').val();
-        let text2 = $('#text2').val();
-        let mbti_image = $('#mbti_image').val();
-        let mbti_text = $('#mbti_text').val();
+      $("#postingbtn").click(async function () {
+        let user_name = $("#user_name").val();
+        let main_image = $("#main_image").val();
+        let main_text = $("#main_text").val();
+        let sub_image1 = $("#sub_image1").val();
+        let sub_text1 = $("#sub_text1").val();
+        let sub_image2 = $("#sub_image2").val();
+        let sub_text2 = $("#sub_text2").val();
 
-        if (!user_name || !user_card || !text1 || !image1 || !text2 || !mbti_image || !mbti_text) {
-            alert("모든 필드를 채워주세요!");
+        if (
+          !user_name ||
+          !main_image ||
+          !main_text ||
+          !sub_image1 ||
+          !sub_text1 ||
+          !sub_image2 ||
+          !sub_text2
+        ) {
+          alert("모든 필드를 채워주세요!");
+        } else {
+          let doc = {
+            id: id,
+            user_name: user_name,
+            main_image: main_image,
+            main_text: main_text,
+            sub_image1: sub_image1,
+            sub_text1: sub_text1,
+            sub_image2: sub_image2,
+            sub_text2: sub_text2,
+          };
+          try {
+            await addDoc(collection(db, "introduce"), doc);
+            alert("저장 완료!");
+            window.location.href = "subpage1.html?id=" + id;
+          } catch (e) {
+            console.error(e);
+          }
         }
-        else {
-            let doc = {
-                'id': id,
-                'user_name' : user_name,
-                'user_card': user_card,
-                'text1': text1,
-                'image1': image1,
-                'text2': text2,
-                'mbti_image': mbti_image,
-                'mbti_text': mbti_text,
-            }
-            try {
-                await addDoc(collection(db, "introduce"), doc);
-                alert('저장 완료!');
-                window.location.href = 'subpage1.html?id=' + id;
-            } catch (e) {
-                console.error(e);
-            }
-        }        
-      })
+      });
       // 헤더푸터 사용방법
-    $(function () {
-      $("#header").load("header.html");
-      $("#footer").load("footer.html");
-  });
+      $(function () {
+        $("#header").load("header.html");
+        $("#footer").load("footer.html");
+      });
+    </script>
+    <script>
+      function makeCard() {
+        // 이전 카드들을 지우기 위해 .empty() 사용
+        $("#card").empty();
 
+        // 입력 값 가져오기
+        let image = $("#image").val();
+        let name = $("#name").val();
+        let mbti = $("#mbti").val();
+        let content = $("#content").val();
+
+        let temp_html = `
+            <div class="col">
+              <div class="card h-100">
+                <img
+                  src="${image}"
+                  class="card-img-top"
+                  alt="..."
+                />
+                <div class="card-body">
+                  <h5 class="card-title">${name}</h5>
+                  <p class="card-text">${mbti}</p>
+                </div>
+                <div class="card-footer">
+                  <p class="card-text">${content}</p>
+                </div>
+              </div>
+            </div>`;
+        $("#card").append(temp_html);
+      }
     </script>
   </head>
 
   <body>
     <div id="header" class="header"></div>
-    <input
-        type="email"
-        class="form-control"
-        id="user_name"
-        placeholder="당신의 이름을 입력하세요."
-      />
+
     <div class="whole">
-      <div class="left-side">
-        <div class="left-top">
-            <input
-            type="email"
-            class="form-control"
-            id="user_card"
-            placeholder="이미지 주소를 입력하세요."
-          />
-        </div>
-        <div class="left-bottom">
-            <textarea
-            id="text1"
-            class="form-control"
-            aria-label="With textarea"
-            placeholder="내용을 입력하세요."
-          ></textarea>
-        </div>
-      </div>
+      <div id="card"></div>
       <div class="right-side">
-        <!-- 여기부터 반복 -->
-        <div class="right-box">
-          <div class="clearfix">
+        <div class="mypostingbox" id="postingbox">
+          <div class="form-floating mb-3">
             <input
-              id="image1"
-              type="email"
-              class="form-control"
-              placeholder="이미지 주소를 입력하세요."
-            />
-            <textarea
-              id="text2"
-              class="form-control"
-              aria-label="With textarea"
-              placeholder="내용을 입력하세요."
-            ></textarea>
-          </div>
-        </div>
-        <div class="right-box">
-          <div class="clearfix">
-            <input
-              id="mbti_image"
               type="email"
               class="form-control"
               id="image"
-              placeholder="이미지 주소를 입력하세요."
+              placeholder="사진"
             />
-            <textarea
-              id="mbti_text"
+            <label for="floatingInput">사진</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input
+              type="email"
               class="form-control"
-              aria-label="With textarea"
-              placeholder="내용을 입력하세요."
-            ></textarea>
-            </div>
+              id="name"
+              placeholder="이름"
+            />
+            <label for="floatingInput">이름</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input
+              type="email"
+              class="form-control"
+              id="mbti"
+              placeholder="MBTI"
+            />
+            <label for="floatingInput">MBTI</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input
+              type="email"
+              class="form-control"
+              id="content"
+              placeholder="자기소개"
+            />
+            <label for="floatingInput">자기소개</label>
+          </div>
+          <div class="mybtn">
+            <button
+              onclick="makeCard()"
+              id="postingbtn1"
+              type="button"
+              class="btn btn-dark"
+            >
+              미리보기
+            </button>
+            <button id="postingbtn" type="button" class="btn btn-info">
+              등록하기
+            </button>
           </div>
         </div>
-        <!-- 여기까지 -->
       </div>
     </div>
-    <div id="footer" class="footer">        
-    </div>
-    <button id="postingbtn" type="button" class="btn btn-info">등록하기</button>
+    <div id="footer" class="footer"></div>
   </body>
 </html>

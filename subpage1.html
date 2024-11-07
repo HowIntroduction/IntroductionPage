@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
+
+<head>
+    <meta charset="UTF-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <link
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>상세페이지</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha384-XxheqFYqN6V9QRhR2Fgw+KVYlW5U6s80N2y0tZ9dtM5i0UszUA4GZ5v5OY7KMb6L"
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="styles.css" />
@@ -26,197 +25,167 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"
     />
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=Dongle&display=swap");
+        @import url('https://fonts.googleapis.com/css2?family=Dongle&display=swap');
 
-      * {
-        font-family: "Dongle", sans-serif;
-        font-weight: 400;
-        font-style: normal;
-      }
+        * {
+            font-family: "Dongle", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
 
-      .whole {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
+        .whole {
+            background-color: aqua;
+            display: grid;
+            grid-gap: 2vw;
+            grid-template-columns: 1fr 1fr;
+            height: 100vh;
+        }
 
-      .left-top {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        margin-bottom: 20px;
-      }
+        .left-side,
+        .right-side {
+            display: grid;
+            flex-direction: column;
+            padding: 2vw;
+            height: 90vh;
+            margin: auto;
+        }
 
-      .left-top > img {
-        width: 100vw; /* 화면 전체 너비 */
-        height: auto;
-        object-fit: cover;
-        max-height: 500px;
-      }
+        .left-side {
+            grid-template-rows: 1fr 2fr;
+            background-color: aquamarine;
+            margin-left: 5vw;
+            margin-right: 5vw;
+        }
 
-      /* 소개 섹션 */
-      .introduce {
-        display: flex;
-        flex-direction: column;
-      }
+        .right-side {
+            grid-template-rows: 1fr 1fr;
+            grid-gap: 2vw;
+            background-color: blueviolet;
+            margin-left: -5vw;
+            margin-right: 5vw;
+        }
 
-      .introduce h1 {
-        font-size: 72px;
-        margin: 20px 0;
-      }
+        .left-top,
+        .left-bottom,
+        .right-box {
+            background-color: bisque;
+            width: 90%;
+            margin: auto;
+        }
 
-      .introduce p {
-        font-size: 40px;
-        margin-bottom: 40px;
-      }
+        .left-top {
+            height: 30vh;
+            display: flex;
+            align-items: center;
+            justify-content: center; 
+        }
 
-      /* 메뉴 섹션 */
-      /* 메뉴 섹션 */
-      .introduce-container {
-        width: 100%;
-        max-width: 1024px;
-        padding: 20px;
-      }
+        .left-top > img {
+            max-width: 100%;
+            height: auto;  
+        }
 
-      .right-side {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        width: 100%;
-        max-width: 1024px;
-      }
+        .left-bottom {
+            height: 50vh;
+            overflow: hidden;
+            background-color: brown;
+        }
 
-      .right-box {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between; /* 양쪽으로 여백 생성 */
-        width: 100%;
-        margin-bottom: 40px;
-        border-color: #555;
-      }
+        .right-box {
+            height: 40vh;
+            background-color: pink;
+        }
 
-      .clearfix {
-        display: flex;
-        align-items: center;
-        width: 100%;
-        max-width: 1200px;
-        height: auto;
-        justify-content: space-between;
-      }
+        .right-box>.clearfix {
+            overflow: hidden;
+        }
 
-      .image1,
-      .mbti_image {
-        max-width: 450px; /* 이미지 크기 조정 */
-        max-height: 300px;
-        object-fit: cover;
-        border-radius: 10px;
-        width: 100%;
-        height: 100%;
-      }
-
-      .p {
-        font-size: 20px;
-        color: #555;
-        margin: 0;
-        border-radius: 10px;
-        max-width: 450px;
-        max-height: 250px;
-        flex-grow: 1; /* 텍스트 부분이 남은 공간을 채우도록 설정 */
-        overflow: hidden;
-      }
-
-      .text2,
-      .mbti_text {
-        width: 100%;
-        height: 100%;
-        max-width: 450px;
-        text-align: center;
-        border-radius: 10px;
-        border: 1px solid black;
-      }
+        .header,
+        .footer {
+            height: 5vh;
+        }
     </style>
     <script type="module">
-      const member = new URLSearchParams(window.location.search);
-      let member_id = member.get("id");
-      if (!member_id) {
-        member_id = "80784122-f234-4955-991b-35976fc289d5";
-      }
-      // Firebase SDK 라이브러리 가져오기
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-      import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-      import {
-        collection,
-        addDoc,
-      } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-      import {
-        query,
-        where,
-        getDocs,
-      } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-      // Firebase 구성 정보 설정
-      const firebaseConfig = {
-        apiKey: "AIzaSyClPXmUFKKAr6m1lFyn-v1W65Dl-X4foWE",
-        authDomain: "sparta-dafac.firebaseapp.com",
-        projectId: "sparta-dafac",
-        storageBucket: "sparta-dafac.firebasestorage.app",
-        messagingSenderId: "466405941138",
-        appId: "1:466405941138:web:9ff4fb0ae5f6f861622b4b",
-        measurementId: "G-FWYNHPBX6W",
-      };
+        const member = new URLSearchParams(window.location.search);
+        let member_id = member.get('id');          
+        if (!member_id) {
+            member_id = "80784122-f234-4955-991b-35976fc289d5";
+        } 
+        // Firebase SDK 라이브러리 가져오기
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import {query, where, getDocs} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-      // Firebase 인스턴스 초기화
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
+        // Firebase 구성 정보 설정
+        const firebaseConfig = {
+            apiKey: "AIzaSyClPXmUFKKAr6m1lFyn-v1W65Dl-X4foWE",
+            authDomain: "sparta-dafac.firebaseapp.com",
+            projectId: "sparta-dafac",
+            storageBucket: "sparta-dafac.firebasestorage.app",
+            messagingSenderId: "466405941138",
+            appId: "1:466405941138:web:9ff4fb0ae5f6f861622b4b",
+            measurementId: "G-FWYNHPBX6W"
+        };
 
-      const find_by_id = query(
-        collection(db, "introduce"),
-        where("id", "==", member_id)
-      );
-      let docs = await getDocs(find_by_id);
-      docs.forEach((doc) => {
-        let row = doc.data();
 
-        if (row["user_card"]) {
-          $("#user_card").attr("src", row["user_card"]);
-        }
-        if (row["text1"]) {
-          $("#text1").text(row["text1"]);
-        }
-        if (row["image1"]) {
-          $("#image1").attr("src", row["image1"]);
-        }
-        if (row["text2"]) {
-          $("#text2").text(row["text2"]);
-        }
-        if (row["mbti_image"]) {
-          $("#mbti_image").attr("src", row["mbti_image"]);
-        }
-        if (row["mbti_text"]) {
-          $("#mbti_text").text(row["mbti_text"]);
-        }
-      });
-      // 헤더푸터 사용방법
-      $(function () {
-        $("#header").load("header.html");
+        // Firebase 인스턴스 초기화
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        $('#return_home').click(function() {
+            window.location.href = 'mainpage.html';
+        });
+        
+        const find_by_id = query(collection(db, "introduce"), where("id", "==", member_id))
+        let docs = await getDocs(find_by_id);
+        docs.forEach((doc) => {
+            let row = doc.data();
+
+            if(row['main_image']) {
+                $('#main_image').attr('src',row['main_image']);
+            }
+            if(row['main_text']) {
+                $('#main_text').text(row['main_text']);
+            }
+            if(row['sub_image1']) {
+                $('#sub_image1').attr('src',row['sub_image1']);
+            }
+            if(row['sub_text1']) {
+                $('#sub_text1').text(row['sub_text1']);
+            }
+            if(row['sub_image2']) {
+                $('#sub_image2').attr('src',row['sub_image2']);
+            }
+            if(row['sub_text2']) {
+                $('#sub_text2').text(row['sub_text2']);
+            }
+            if(row['user_name']) {
+                intro.textContent = intro.textContent.replace('이름', row['user_name']);
+            }    
+        });
+    // 헤더푸터 사용방법
+    $(function () {
+        $("#header").append($("<div>").load("header.html"));
         $("#footer").load("footer.html");
-      });
+    });
     </script>
-  </head>
+</head>
 
-  <body>
-    <div class="header" id="header"></div>
+<body>
+    <div class="header" id="header">
+        <p id="intro">이름 님의 페이지 입니다.</p>
+        <button id="return_home" type="button" class="btn btn-primary">홈</button>
+    </div>
     <div class="whole">
         <div class="left-side">
             <div class="left-top">
-                <img id="user_card" src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzAxMTBfMjMz%2FMDAxNDg0MDUzNTU0MTEz.h9huZdcXFlEpGpMeyk3WLXE7FVQDWzKvzJeslZkdNd8g.4grDg9_bAChg6jh92ZuHbYQyIKV4l9iLt2N6j-wMX0Eg.PNG.mamacora%2Fwallhaven-407202.png&type=a340"
+                <img id="main_image" src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzAxMTBfMjMz%2FMDAxNDg0MDUzNTU0MTEz.h9huZdcXFlEpGpMeyk3WLXE7FVQDWzKvzJeslZkdNd8g.4grDg9_bAChg6jh92ZuHbYQyIKV4l9iLt2N6j-wMX0Eg.PNG.mamacora%2Fwallhaven-407202.png&type=a340"
                     alt="기본 이미지">
             </div>
             <div class="left-bottom">
-                <p id="text1">아직 작성된 글이 없습니다. 
+                <p id="main_text">아직 작성된 글이 없습니다. 
                 </p>
             </div>
         </div>
@@ -224,30 +193,28 @@
             <!-- 여기부터 반복 -->
             <div class="right-box">
                 <div class="clearfix">
-                    <img id="image1" src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzAxMTBfMjMz%2FMDAxNDg0MDUzNTU0MTEz.h9huZdcXFlEpGpMeyk3WLXE7FVQDWzKvzJeslZkdNd8g.4grDg9_bAChg6jh92ZuHbYQyIKV4l9iLt2N6j-wMX0Eg.PNG.mamacora%2Fwallhaven-407202.png&type=a340"
+                    <img id="sub_image1" src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzAxMTBfMjMz%2FMDAxNDg0MDUzNTU0MTEz.h9huZdcXFlEpGpMeyk3WLXE7FVQDWzKvzJeslZkdNd8g.4grDg9_bAChg6jh92ZuHbYQyIKV4l9iLt2N6j-wMX0Eg.PNG.mamacora%2Fwallhaven-407202.png&type=a340"
                         alt="기본 이미지">
-                    <p id="text2">아직 작성된 글이 없습니다.                  
+                    <p id="sub_text1">아직 작성된 글이 없습니다.                  
                     </p> 
                 </div>
             </div>
             <div class="right-box">
                 <div class="clearfix">
                     <div class="clearfix">
-                        <img id="mbti_image" src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzAxMTBfMjMz%2FMDAxNDg0MDUzNTU0MTEz.h9huZdcXFlEpGpMeyk3WLXE7FVQDWzKvzJeslZkdNd8g.4grDg9_bAChg6jh92ZuHbYQyIKV4l9iLt2N6j-wMX0Eg.PNG.mamacora%2Fwallhaven-407202.png&type=a340"
+                        <img id="sub_image2" src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxNzAxMTBfMjMz%2FMDAxNDg0MDUzNTU0MTEz.h9huZdcXFlEpGpMeyk3WLXE7FVQDWzKvzJeslZkdNd8g.4grDg9_bAChg6jh92ZuHbYQyIKV4l9iLt2N6j-wMX0Eg.PNG.mamacora%2Fwallhaven-407202.png&type=a340"
                             alt="기본 이미지">
-                        <p id="mbti_text">
+                        <p id="sub_text2">
                             아직 작성된 글이 없습니다. 
                         </p>
                         </p>
                     </div>
                 </div>
-              </div>
             </div>
-          </div>
-          <!-- 여기까지 -->
+            <!-- 여기까지 -->
         </div>
-      </section>
     </div>
-    <footer class="footer" id="footer">푸터입니다</footer>
-  </body>
+    <footer class="footer">푸터입니다</footer>
+</body>
+
 </html>
