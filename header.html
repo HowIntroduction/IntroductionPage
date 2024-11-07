@@ -5,7 +5,9 @@
       <li id="introduce" class="left_content_member_list">
         <a href="#">팀 소개</a>
       </li>
-      <li class="left_content_member_list"><a href="#">추가</a></li>
+      <li id="guest_note" class="left_content_member_list">
+        <a href="#">방명록</a>
+      </li>
       <li id="add" class="left_content_member_list">
         <a href="#">등록하기</a>
       </li>
@@ -31,12 +33,16 @@
     window.location.href = "AboutPage.html";
   });
 
+  $("#guest_note").click(function () {
+    window.location.href = "guestBook.html";
+  });
+
   $("#home").click(function () {
     window.location.href = "mainpage.html";
   });
 
-  $(".search_input").keydown(e => {
-    if(e.keyCode == 13) {
+  $(".search_input").keydown((e) => {
+    if (e.keyCode == 13) {
       window.location.href = `searchpage.html?id=${e.target.value}`;
     }
   });
