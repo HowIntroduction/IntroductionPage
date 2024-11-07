@@ -35,29 +35,29 @@
         font-weight: 400;
         font-style: normal;
       }
+
       .slider {
-        width: 100vw;
-        margin: 0 auto;
+        max-width: 850px;
       }
 
       .slider img {
         width: 100%;
+        margin: 0 auto;
         height: 100%;
-        max-height: 500px; /* 슬라이더 이미지의 최대 높이 설정 */
-        object-fit: contain; /* 이미지가 슬라이더를 꽉 채우도록 설정 */
+        min-height: 480px;
+        border: 1px solid #ccc;
+        object-fit: contain;
       }
 
       .slick-dots {
         position: relative;
-        margin-top: -4% !important;
         z-index: 9999;
       }
       .cards-container {
         margin-top: 85px;
-        max-width: 1072px;
         width: 100%;
-        padding: 0 24px;
       }
+
       .card-section {
         margin-bottom: 40px;
       }
@@ -92,7 +92,6 @@
       @media (max-width: 1250px) {
         .slick-dots {
           position: relative;
-          margin-top: -8% !important;
           z-index: 9999;
         }
       }
@@ -121,6 +120,31 @@
         flex-direction: row;
         height: 600px;
         margin: 30px 30px 30px 30px;
+      }
+      section {
+        max-width: 1280px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 24px;
+        box-sizing: content-box;
+      }
+      .section1 {
+        display: flex;
+        margin: 0 auto;
+        gap: 16px;
+      }
+
+      .slider-info {
+        width: 100%;
+        height: 100%;
+        max-height: 200px;
+        font-size: 28px;
+      }
+
+      .slider-info-card {
+        border: 1px solid #ddd;
+        padding: 10px;
+        height: 480px;
       }
     </style>
 
@@ -298,22 +322,39 @@
         }
       });
 
+      // JavaScript: 슬릭 슬라이더 옆에 이미지에 맞는 정보 카드 렌더링
       $(document).ready(async () => {
         const memberList = await getMemberList();
 
-        // 최신 5개의 이미지를 슬라이더에 추가
-        const latestMembers = memberList.slice(-5).reverse(); // 최신 5개만 추출하여 최신순으로 정렬
-
+        const latestMembers = memberList.slice(-5).reverse();
         const slider = $("#slider");
+        const sliderInfo = $("#sliderInfo");
+
         latestMembers.forEach((member) => {
           slider.append(`
-        <div>
-          <img src="${member.user_card}" alt="Latest Image" />
-        </div>
-      `);
+      <div>
+        <img src="${member.user_card}" alt="Latest Image" />
+      </div>
+    `);
         });
 
-        // Slick Slider 초기화
+        function updateSliderInfo(index) {
+          const member = latestMembers[index];
+          sliderInfo.html(`
+      <div class="slider-info-card">
+        <h1>${member.user_name}</h1>
+        <p>${member.text1}</p>
+      </div>
+    `);
+
+          matchCardHeight();
+        }
+
+        function matchCardHeight() {
+          const imageHeight = $(".slider img").first().height();
+          $(".slider-info-card").css("height", imageHeight);
+        }
+
         slider.slick({
           dots: true,
           infinite: true,
@@ -321,57 +362,77 @@
           slidesToShow: 1,
           adaptiveHeight: false,
           fade: false,
+          autoplay: true, // 자동 재생 활성화
+          autoplaySpeed: 3000, // 슬라이드 이동 간격 설정 (예: 3초)
         });
+
+        // 슬라이더가 초기화된 후 첫 슬라이드를 즉시 넘기기
+        slider.slick("slickNext");
+
+        slider.on("afterChange", function (event, slick, currentSlide) {
+          updateSliderInfo(currentSlide);
+        });
+
+        // Call matchCardHeight on window resize to ensure it adjusts
+        $(window).on("resize", matchCardHeight);
+
+        // Initial setup
+        updateSliderInfo(0);
       });
     </script>
   </head>
   <body>
-    <div id="header" class="header"></div>
-    <div class="section1" id="section1">
-      <div class="slider" id="slider"></div>
-    </div>
-    <div class="cards-container"></div>
-    <div id="footer" class="footer"></div>
+    <section>
+      <div id="header" class="header"></div>
+      <div class="section1" id="section1">
+        <div class="slider" id="slider"></div>
+        <div class="slider-info" id="sliderInfo"></div>
+        <!-- 카드 정보를 표시할 영역 -->
+      </div>
+      <div class="cards-container"></div>
 
-    <!-- 삭제 확인 모달 -->
-    <div
-      class="modal fade"
-      id="deleteModal"
-      tabindex="-1"
-      aria-labelledby="deleteModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="deleteModalLabel">삭제 할거임?</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">하지망 ㅠ</div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              취소
-            </button>
-            <button
-              type="button"
-              class="btn btn-danger"
-              id="confirmDeleteButton"
-            >
-              삭제
-            </button>
+      <div id="footer" class="footer"></div>
+
+      <!-- 삭제 확인 모달 -->
+      <div
+        class="modal fade"
+        id="deleteModal"
+        tabindex="-1"
+        aria-labelledby="deleteModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deleteModalLabel">삭제 할거임?</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">하지망 ㅠ</div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                취소
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                id="confirmDeleteButton"
+              >
+                삭제
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   </body>
   <script>
     $(window).on("load", function () {

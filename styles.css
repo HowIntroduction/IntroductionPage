@@ -10,16 +10,16 @@ body {
   padding: 0;
   justify-content: center;
   align-items: center;
+  min-width: 425px;
 }
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 1328px;
   max-height: 80px;
   margin: 0 auto;
-  padding: 16px 24px;
+  box-sizing: content-box;
 }
 .right_content {
   display: flex;
