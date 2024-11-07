@@ -161,6 +161,7 @@
 
         const members = rawMembers.docs.map((doc) => ({
           id: doc.data().id,
+          user_name: doc.data().user_name,
           user_card: doc.data().user_card,
           text1: doc.data().text1,
           image1: doc.data().image1,
@@ -220,7 +221,9 @@
                                 member.user_card
                               }" class="card-img-top" alt="Member ${j + 1}" />
                               <div class="card-body">
-                                  <h5 class="card-title">멤버 ${j + 1}</h5>
+                                  <h5 class="card-title">${
+                                    member.user_name
+                                  }</h5>
                                   <p class="card-text">${member.text1}</p>
                               </div>
                               <div class="card-footer">
