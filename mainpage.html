@@ -267,7 +267,7 @@
             // 삭제 후 페이지 새로 고침
             cardElement.closest(".col").remove();
             alert("삭제가 완료되었습니다.");
-            //window.location.reload(); // 페이지 새로 고침
+            window.location.reload(); // 페이지 새로 고침
           } catch (error) {
             alert("삭제 중 오류가 발생했습니다: " + error.message);
             console.log(error.message);
