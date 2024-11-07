@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>우리어떻게하조 메인페이지</title>
+    <title>검색 결과</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -23,13 +23,8 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=Dongle&display=swap");
-      * {
-        font-family: "Dongle", sans-serif;
-        font-weight: 400;
-        font-style: normal;
-      }
       .slider {
         width: 100vw;
         margin: 0 auto;
@@ -38,17 +33,18 @@
       .slider img {
         width: 100%;
         height: 100%;
-        max-height: 500px; /* 슬라이더 이미지의 최대 높이 설정 */
+        max-height: 400px; /* 슬라이더 이미지의 최대 높이 설정 */
         object-fit: cover; /* 이미지가 슬라이더를 꽉 채우도록 설정 */
+        border-radius: 10px;
       }
 
       .slick-dots {
         position: relative;
-        margin-top: -4% !important;
+        margin-top: -8% !important;
         z-index: 9999;
       }
       .cards-container {
-        margin-top: 85px;
+        margin-top: 120px;
         max-width: 1072px;
         width: 100%;
         padding: 0 24px;
@@ -83,21 +79,11 @@
         padding: 12px 16px;
         background-color: rgba(0, 0, 0, 0.02);
       }
-      /* 반응형 디자인 */
-      @media (max-width: 1250px) {
-        .slick-dots {
-          position: relative;
-          margin-top: -8% !important;
-          z-index: 9999;
-        }
-      }
+
       /* 반응형 디자인 */
       @media (max-width: 992px) {
         .cards-grid {
           grid-template-columns: repeat(2, 1fr);
-        }
-        .slick-dots {
-          visibility: hidden;
         }
       }
 
@@ -123,12 +109,8 @@
       import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
       import {
         getFirestore,
-        query,
-        where,
         collection,
         getDocs,
-        deleteDoc,
-        doc,
       } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
       const CARDS_FOR_SECTION = 3;
@@ -154,41 +136,66 @@
         const rawMembers = await getDocs(collection(db, "introduce"));
         console.log(rawMembers, "rawMembers");
 
+        /*
         const members = rawMembers.docs.map((doc) => ({
           id: doc.data().id,
+          user_name: doc.data().user_name,
           user_card: doc.data().user_card,
           text1: doc.data().text1,
+          text2: doc.data().text2,
           image1: doc.data().image1,
           mbti_image: doc.data().mbti_image,
-          text2: doc.data().text2,
           mbti_text: doc.data().mbti_text,
         }));
+        */
+        const members = rawMembers.docs.map((doc) => ({
+          id: doc.data().id,
+          main_image: doc.data().main_image,
+          main_text: doc.data().main_text,
+          sub_image1: doc.data().sub_image1,
+          sub_image2: doc.data().sub_image2,
+          sub_text1: doc.data().sub_text1,
+          sub_text2: doc.data().sub_text2,
+        }));
 
-        return members;
+        return searchMemberList(members);
+      };
+
+      const searchMemberList = (memberList) => {
+        // 검색 값을 받아와 memberList에 대해 검색
+        const search = new URLSearchParams(window.location.search);
+        const search_id = search.get("id");
+
+        const searchList = memberList.filter(
+          (member) => member.id.indexOf(search_id) != -1
+        );
+
+        return searchList;
       };
 
       const setCurrentMember = (member) => {
-        localStorage.setItem("currentMemberId", member.id);
+        localStorage.setItem("currentMember", member);
         presentCurrentMember(member);
       };
 
       const presentCurrentMember = (member) => {
-        $(".mainbox").attr("src", member.user_card);
-        $(".text").text(member.text1);
+        $(".mainbox").attr("src", member.main_image);
+        $(".text").text(member.main_text);
       };
 
       // 페이지 최초 로딩 시 실행
       $(document).ready(async () => {
-        const memberList = await getMemberList();
+        const searchList = await getMemberList();
+
         const root = $("#container");
-        console.log(memberList, "memberList");
+        console.log(searchList, "searchList");
 
         // Create main container
         root.append('<div class="cards-container"></div>');
         const container = $(".cards-container");
 
         // Calculate number of sections needed
-        const numSections = Math.ceil(memberList.length / CARDS_FOR_SECTION);
+        const numSections = Math.ceil(searchList.length / CARDS_FOR_SECTION);
 
         for (let i = 0; i < numSections; i++) {
           const sectionHTML = `
@@ -203,24 +210,23 @@
           const startIdx = i * CARDS_FOR_SECTION;
           const endIdx = Math.min(
             startIdx + CARDS_FOR_SECTION,
-            memberList.length
+            searchList.length
           );
 
           for (let j = startIdx; j < endIdx; j++) {
-            const member = memberList[j];
+            const member = searchList[j];
             const cardHTML = `
                       <div class="col">
-                          <div class="card h-100" data-id="${member.id}">
+                          <div class="card h-100">
                               <img src="${
-                                member.user_card
+                                member.main_image
                               }" class="card-img-top" alt="Member ${j + 1}" />
                               <div class="card-body">
                                   <h5 class="card-title">멤버 ${j + 1}</h5>
-                                  <p class="card-text">${member.text1}</p>
+                                  <p class="card-text">${member.main_text}</p>
                               </div>
                               <div class="card-footer">
                                   <small class="text-body-secondary">앨범 날짜</small>
-                                  <button type="button" class="delete-button btn btn-info">삭제</button>
                               </div>
                           </div>
                       </div>
@@ -230,66 +236,32 @@
         }
 
         // 2. 카드 클릭 이벤트 수정
-        memberList.forEach((member, index) => {
+        searchList.forEach((member, index) => {
           $(`.col:eq(${index}) .card`).click(() => {
-            if (!$(event.target).hasClass("delete-button")) {
-              // 삭제 버튼 클릭을 제외한 클릭
-              setCurrentMember(memberList[index]);
-              //상세 페이지로 이동
-              window.location.href = `./subpage1.html?id=${member.id}`;
-            }
+            setCurrentMember(member);
+            // 상세 페이지로 이동
+            window.location.href = `./subpage1.html?id=${member.id}`;
           });
         });
+
         // Page redirection on click
         $("#add_detail").click(() => {
           window.location.href = "./adddetail.html";
         });
       });
-
-      // 삭제 버튼 클릭 이벤트 처리
-      $(document).on("click", ".delete-button", async function (event) {
-        event.stopPropagation(); // 카드 클릭 이벤트가 실행되지 않도록 막음
-        const cardElement = $(this).closest(".card"); // 삭제 버튼이 포함된 카드 찾기
-        const memberId = cardElement.data("id"); // 해당 카드의 멤버 ID
-        if (memberId) {
-          try {
-            const db = initFirebase();
-
-            const target = await getDocs(
-              query(collection(db, "introduce"), where("id", "==", memberId))
-            );
-            for (const documentTarget of target.docs) {
-              const documentId = documentTarget.id; // 문서의 실제 ID
-              const docRef = doc(db, "introduce", documentId); // 문서 참조
-              await deleteDoc(docRef); // 문서 삭제
-              console.log(`문서 ${documentId} 삭제 완료`);
-            }
-            // 삭제 후 페이지 새로 고침
-            cardElement.closest(".col").remove();
-            alert("삭제가 완료되었습니다.");
-            //window.location.reload(); // 페이지 새로 고침
-          } catch (error) {
-            alert("삭제 중 오류가 발생했습니다: " + error.message);
-            console.log(error.message);
-          }
-        } else {
-          alert("멤버 ID를 찾을 수 없습니다.");
-        }
-      });
-
       $(document).ready(async () => {
-        const memberList = await getMemberList();
+        const searchList = await getMemberList();
 
         // 최신 5개의 이미지를 슬라이더에 추가
-        const latestMembers = memberList.slice(-5).reverse(); // 최신 5개만 추출하여 최신순으로 정렬
+        const latestMembers = searchList.slice(-5).reverse(); // 최신 5개만 추출하여 최신순으로 정렬
 
         const slider = $("#slider");
         latestMembers.forEach((member) => {
           slider.append(`
-        <div>
-          <img src="${member.user_card}" alt="Latest Image" />
-        </div>
-      `);
+            <div>
+              <img src="${member.main_image}" alt="Latest Image" />
+            </div>
+          `);
         });
 
         // Slick Slider 초기화
@@ -302,22 +274,9 @@
           fade: false,
         });
       });
-      /*
-            랜덤 멤버 기능
-            const getRandomMember = () => {
-                const memberList = getMemberList();
-                return memberList[Math.floor(Math.random() * memberList.length)];
-            }
-
-            // element에 등록될 메서드
-            const setRandomMember = () => {
-                const member = getRandomMember();
-                localStorage.setItem("currentMember", member);
-                presentCurrentMember(member);
-            }
-            */
     </script>
   </head>
+
   <body>
     <div id="header" class="header"></div>
     <div class="section1" id="section1">
