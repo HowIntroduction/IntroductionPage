@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>우리어떻게하조 메인페이지</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Dongle&display=swap");
+      * {
+        font-family: "Dongle", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+      }
+
+      .slider {
+        max-width: 850px;
+      }
+
+      .slider img {
+        width: 100%;
+        margin: 0 auto;
+        height: 100%;
+        min-height: 480px;
+        max-height: 480px;
+        border: 1px solid #ccc;
+        object-fit: contain;
+      }
+
+      .slick-dots {
+        position: relative;
+        z-index: 9999;
+      }
+      .cards-container {
+        margin-top: 85px;
+        width: 100%;
+      }
+
+      .card-section {
+        margin-bottom: 40px;
+      }
+      /* 카드 스타일링 */
+      .card {
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.2s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .card-img-top {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .card-body {
+        padding: 16px;
+      }
+
+      .card-footer {
+        padding: 12px 16px;
+        background-color: rgba(0, 0, 0, 0.02);
+      }
+      /* 반응형 디자인 */
+      @media (max-width: 1250px) {
+        .slick-dots {
+          position: relative;
+          z-index: 9999;
+        }
+      }
+      /* 반응형 디자인 */
+      @media (max-width: 992px) {
+        .cards-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .slick-dots {
+          visibility: hidden;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .cards-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      /* 필요 없을 시 삭제할 것 */
+      .main,
+      #add_detail {
+        background-color: gray;
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        flex-direction: row;
+        height: 600px;
+        margin: 30px 30px 30px 30px;
+      }
+      section {
+        max-width: 1280px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 24px;
+        box-sizing: content-box;
+      }
+      .section1 {
+        display: flex;
+        margin: 0 auto;
+        gap: 16px;
+      }
+
+      .slider-info {
+        width: 100%;
+        height: 100%;
+        max-height: 200px;
+        font-size: 28px;
+      }
+
+      .slider-info-card {
+        border: 1px solid #ddd;
+        padding: 10px;
+        height: 480px;
+      }
+    </style>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+      import {
+        getFirestore,
+        query,
+        where,
+        collection,
+        getDocs,
+        deleteDoc,
+        doc,
+      } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+      const CARDS_FOR_SECTION = 3;
+
+      const initFirebase = () => {
+        const firebaseConfig = {
+          apiKey: "AIzaSyClPXmUFKKAr6m1lFyn-v1W65Dl-X4foWE",
+          authDomain: "sparta-dafac.firebaseapp.com",
+          projectId: "sparta-dafac",
+          storageBucket: "sparta-dafac.firebasestorage.app",
+          messagingSenderId: "466405941138",
+          appId: "1:466405941138:web:9ff4fb0ae5f6f861622b4b",
+          measurementId: "G-FWYNHPBX6W",
+        };
+        const app = initializeApp(firebaseConfig);
+
+        return getFirestore(app);
+      };
+
+      const getMemberList = async () => {
+        const db = initFirebase();
+        console.log(db, "introduce");
+        const rawMembers = await getDocs(collection(db, "introduce"));
+        console.log(rawMembers, "rawMembers");
+
+        const members = rawMembers.docs.map((doc) => ({
+          id: doc.data().id,
+          user_name: doc.data().user_name,
+          user_card: doc.data().user_card,
+          text1: doc.data().text1,
+          image1: doc.data().image1,
+          mbti_image: doc.data().mbti_image,
+          text2: doc.data().text2,
+          mbti_text: doc.data().mbti_text,
+        }));
+
+        return members;
+      };
+
+      const setCurrentMember = (member) => {
+        localStorage.setItem("currentMemberId", member.id);
+        presentCurrentMember(member);
+      };
+
+      const presentCurrentMember = (member) => {
+        $(".mainbox").attr("src", member.user_card);
+        $(".text").text(member.text1);
+      };
+
+      // 페이지 최초 로딩 시 실행
+      $(document).ready(async () => {
+        const memberList = await getMemberList();
+        const root = $("#container");
+        console.log(memberList, "memberList");
+
+        // Create main container
+        root.append('<div class="cards-container"></div>');
+        const container = $(".cards-container");
+
+        // Calculate number of sections needed
+        const numSections = Math.ceil(memberList.length / CARDS_FOR_SECTION);
+
+        for (let i = 0; i < numSections; i++) {
+          const sectionHTML = `
+                  <div class="card-section" id="section${i}">
+                      <div class="row row-cols-1 row-cols-md-3 g-4">
+                      </div>
+                  </div>
+              `;
+          container.append(sectionHTML);
+
+          // Add cards for this section
+          const startIdx = i * CARDS_FOR_SECTION;
+          const endIdx = Math.min(
+            startIdx + CARDS_FOR_SECTION,
+            memberList.length
+          );
+
+          for (let j = startIdx; j < endIdx; j++) {
+            const member = memberList[j];
+            const cardHTML = `
+                      <div class="col">
+                          <div class="card h-100" data-id="${member.id}">
+                              <img src="${
+                                member.user_card
+                              }" class="card-img-top" alt="Member ${j + 1}" />
+                              <div class="card-body">
+                                  <h5 class="card-title">${
+                                    member.user_name
+                                  }</h5>
+                                  <p class="card-text">${member.text1}</p>
+                              </div>
+                              <div class="card-footer">
+                                  <small class="text-body-secondary"></small>
+                                  <button type="button" class="delete-button btn btn-danger">삭제</button>
+                              </div>
+                          </div>
+                      </div>
+                  `;
+            $(`#section${i} .row`).append(cardHTML);
+          }
+        }
+
+        // 2. 카드 클릭 이벤트 수정
+        memberList.forEach((member, index) => {
+          $(`.col:eq(${index}) .card`).click(() => {
+            if (!$(event.target).hasClass("delete-button")) {
+              // 삭제 버튼 클릭을 제외한 클릭
+              setCurrentMember(memberList[index]);
+              //상세 페이지로 이동
+              window.location.href = `./subpage1.html?id=${member.id}`;
+            }
+          });
+        });
+        // Page redirection on click
+        $("#add_detail").click(() => {
+          window.location.href = "./adddetail.html";
+        });
+      });
+
+      // 삭제 버튼 클릭 이벤트 처리
+      $(document).on("click", ".delete-button", async function (event) {
+        event.stopPropagation(); // 카드 클릭 이벤트가 실행되지 않도록 막음
+        const cardElement = $(this).closest(".card"); // 삭제 버튼이 포함된 카드 찾기
+        const memberId = cardElement.data("id"); // 해당 카드의 멤버 ID
+
+        // 모달 열기
+        const deleteModal = new bootstrap.Modal(
+          document.getElementById("deleteModal")
+        );
+        $("#deleteModal").data("memberId", memberId);
+        $("#deleteModal").data("cardElement", cardElement);
+        deleteModal.show();
+      });
+      //삭제 확인 모달의 예 버튼 클릭시
+      $(document).on("click", "#confirmDeleteButton", async function () {
+        const memberId = $("#deleteModal").data("memberId"); // 모달에서 memberId 가져오기
+        const cardElement = $("#deleteModal").data("cardElement"); // 모달에서 cardElement 가져오기
+        if (memberId) {
+          try {
+            const db = initFirebase();
+
+            const target = await getDocs(
+              query(collection(db, "introduce"), where("id", "==", memberId))
+            );
+            for (const documentTarget of target.docs) {
+              const documentId = documentTarget.id; // 문서의 실제 ID
+              const docRef = doc(db, "introduce", documentId); // 문서 참조
+              await deleteDoc(docRef); // 문서 삭제
+              console.log(`문서 ${documentId} 삭제 완료`);
+            }
+            // 삭제 후 페이지 새로 고침
+            cardElement.closest(".col").remove();
+            alert("삭제가 완료되었습니다.");
+            window.location.reload(); // 페이지 새로 고침
+          } catch (error) {
+            alert("삭제 중 오류가 발생했습니다: " + error.message);
+            console.log(error.message);
+          }
+        } else {
+          alert("멤버 ID를 찾을 수 없습니다.");
+        }
+      });
+
+      // JavaScript: 슬릭 슬라이더 옆에 이미지에 맞는 정보 카드 렌더링
+      $(document).ready(async () => {
+        const memberList = await getMemberList();
+
+        const latestMembers = memberList.slice(-5).reverse();
+        const slider = $("#slider");
+        const sliderInfo = $("#sliderInfo");
+
+        latestMembers.forEach((member) => {
+          slider.append(`
+      <div>
+        <img src="${member.user_card}" alt="Latest Image" />
+      </div>
+    `);
+        });
+
+        function updateSliderInfo(index) {
+          const member = latestMembers[index];
+          sliderInfo.html(`
+      <div class="slider-info-card">
+        <h1>${member.user_name}</h1>
+        <p>${member.text1}</p>
+      </div>
+    `);
+
+          matchCardHeight();
+        }
+
+        function matchCardHeight() {
+          const imageHeight = $(".slider img").first().height();
+          $(".slider-info-card").css("height", imageHeight);
+        }
+
+        slider.slick({
+          dots: true,
+          infinite: true,
+          speed: 300,
+          slidesToShow: 1,
+          adaptiveHeight: false,
+          fade: false,
+          autoplay: true, // 자동 재생 활성화
+          autoplaySpeed: 3000, // 슬라이드 이동 간격 설정 (예: 3초)
+        });
+
+        // 슬라이더가 초기화된 후 첫 슬라이드를 즉시 넘기기
+        slider.slick("slickNext");
+
+        slider.on("afterChange", function (event, slick, currentSlide) {
+          updateSliderInfo(currentSlide);
+        });
+
+        // Call matchCardHeight on window resize to ensure it adjusts
+        $(window).on("resize", matchCardHeight);
+
+        // Initial setup
+        updateSliderInfo(0);
+      });
+    </script>
+  </head>
+  <body>
+    <section>
+      <div id="header" class="header"></div>
+      <div class="section1" id="section1">
+        <div class="slider" id="slider"></div>
+        <div class="slider-info" id="sliderInfo"></div>
+        <!-- 카드 정보를 표시할 영역 -->
+      </div>
+      <div class="cards-container"></div>
+
+      <div id="footer" class="footer"></div>
+
+      <!-- 삭제 확인 모달 -->
+      <div
+        class="modal fade"
+        id="deleteModal"
+        tabindex="-1"
+        aria-labelledby="deleteModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deleteModalLabel">삭제 할거임?</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">하지망 ㅠ</div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                취소
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                id="confirmDeleteButton"
+              >
+                삭제
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+  <script>
+    $(window).on("load", function () {
+      // 헤더 및 푸터 로드
+      $("#header").load("header.html");
+      $("#footer").load("footer.html");
+    });
+  </script>
+</html>

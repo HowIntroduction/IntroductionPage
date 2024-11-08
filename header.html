@@ -1,0 +1,49 @@
+<div class="header">
+  <!-- 좌측 메뉴 -->
+  <div class="left_content">
+    <ul class="left_content_member">
+      <li id="introduce" class="left_content_member_list">
+        <a href="#">팀 소개</a>
+      </li>
+      <li id="guest_note" class="left_content_member_list">
+        <a href="#">방명록</a>
+      </li>
+      <li id="add" class="left_content_member_list">
+        <a href="#">등록하기</a>
+      </li>
+    </ul>
+  </div>
+  <!-- 로고와 메뉴 -->
+  <img id="home" class="header_logo" src="images/how_logo.png" alt="로고" />
+  <!-- 우측 뒤로가기 아이콘 및 검색 -->
+  <div class="right_content">
+    <input type="text" class="search_input" placeholder="검색하기" />
+  </div>
+</div>
+<script>
+  $("#add").click(async function () {
+    try {
+      window.location.href = "adddetail.html";
+    } catch (e) {
+      console.error(e);
+    }
+  });
+
+  $("#introduce").click(function () {
+    window.location.href = "AboutPage.html";
+  });
+
+  $("#guest_note").click(function () {
+    window.location.href = "guestBook.html";
+  });
+
+  $("#home").click(function () {
+    window.location.href = "mainpage.html";
+  });
+
+  $(".search_input").keydown((e) => {
+    if (e.keyCode == 13) {
+      window.location.href = `searchpage.html?id=${e.target.value}`;
+    }
+  });
+</script>
